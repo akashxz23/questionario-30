@@ -1,461 +1,235 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Desafio 30 Dias de Hobbies</title>
   <style>
-    :root{
-      --bg:#0b0f1a;         /* preto azulado */
-      --panel:#0e1526;      /* card escuro */
-      --panel-2:#0a0f1f;    
-      --text:#e6f0ff;       /* quase branco azulado */
-      --muted:#8aa2c6;      /* azul cinza */
-      --primary:#3b82f6;    /* azul */
-      --primary-2:#2563eb;  
-      --neon:#60a5fa;       
-      --ok:#22c55e;         
-      --warn:#f59e0b;       
-      --alert:#ef4444;      
-      --border:#1f2a44;
-      --chip:#101a33;
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: #f9f9f9;
+      color: #333;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      background: radial-gradient(1200px 600px at 120% -10%, rgba(59,130,246,.15), transparent 40%),
-                  radial-gradient(900px 400px at -10% 0%, rgba(96,165,250,.08), transparent 40%),
-                  var(--bg);
-      color:var(--text);
-      display:flex; flex-direction:column;
+    h1 {
+      color: #3b82f6;
+      margin-top: 20px;
     }
-    header{
-      position:sticky; top:0; z-index:10; backdrop-filter: blur(10px);
-      background:linear-gradient(180deg, rgba(15,23,42,.75), rgba(15,23,42,.35));
-      border-bottom:1px solid var(--border);
+    button {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
     }
-    .wrap{max-width:1100px; margin:0 auto; padding:14px 18px;}
-    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.3px}
-    .logo{width:28px; height:28px; border-radius:8px; background:linear-gradient(135deg, var(--primary), #0ea5e9); box-shadow:0 0 18px rgba(59,130,246,.7) inset}
-
-    main{flex:1}
-    section{display:none; padding:28px 18px}
-    section.active{display:block}
-
-    .card{background:linear-gradient(180deg, rgba(59,130,246,.06), rgba(59,130,246,.02)); border:1px solid var(--border); border-radius:16px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    .center{max-width:900px; margin:0 auto}
-
-    h1{font-size:clamp(1.6rem, 1.1rem + 1.2vw, 2.2rem); margin:0 0 8px 0}
-    p.lead{color:var(--muted); margin:0 0 16px 0}
-
-    .actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:16px}
-    button, .btn{
-      appearance:none; cursor:pointer; text-decoration:none; color:white; font-weight:700; letter-spacing:.3px;
-      background:linear-gradient(180deg, var(--primary), var(--primary-2));
-      border:1px solid var(--border); border-radius:14px; padding:12px 16px; box-shadow:0 8px 22px rgba(59,130,246,.35);
-      transition: transform .06s ease, filter .2s ease;
-      display:inline-flex; align-items:center; gap:10px
+    button:hover {
+      background: #2563eb;
     }
-    button.secondary{background:var(--panel); color:var(--text)}
-    button:hover{filter:brightness(1.05)}
-    button:active{transform:translateY(1px)}
-
-    /* seleção */
-    .grid-choices{display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;}
-    .choice{background:var(--panel); border:1px solid var(--border); padding:14px; border-radius:14px; display:flex; gap:10px; align-items:flex-start}
-    .choice input{margin-top:2px}
-    .choice h4{margin:0; font-size:1rem}
-    .choice p{margin:4px 0 0 0; color:var(--muted); font-size:.9rem}
-
-    .topbar{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px}
-    .counter{background:var(--chip); border:1px solid var(--border); padding:8px 12px; border-radius:999px; color:var(--neon)}
-
-    /* dashboard */
-    .dash{display:grid; gap:16px}
-    .progress{height:16px; background:var(--panel); border:1px solid var(--border); border-radius:999px; overflow:hidden}
-    .progress > i{display:block; height:100%; width:0; background:linear-gradient(90deg, var(--primary), #22d3ee)}
-
-    .cards{display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:14px}
-    .card-hobby{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:14px; display:grid; gap:10px}
-    .chip{display:inline-block; padding:6px 10px; border-radius:999px; background:var(--chip); color:var(--neon); border:1px solid var(--border); font-size:.85rem}
-    details{background:var(--panel-2); border:1px solid var(--border); border-radius:12px; padding:10px}
-    summary{cursor:pointer; font-weight:700}
-    .done{opacity:.55; filter:saturate(.7)}
-
-    .timebar{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace}
-
-    /* rodapé */
-    footer{border-top:1px solid var(--border); color:var(--muted); font-size:.9rem}
-    .footer-inner{max-width:1100px; margin:0 auto; padding:18px}
-
-    @media (prefers-reduced-motion: no-preference){
-      .pulse{box-shadow:0 0 0 0 rgba(96,165,250,.7); animation:pulse 1.6s infinite}
-      @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(96,165,250,.6)} 70%{box-shadow:0 0 0 18px rgba(96,165,250,0)} 100%{box-shadow:0 0 0 0 rgba(96,165,250,0)}}
+    .hidden {
+      display: none;
+    }
+    .hobby-list {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: left;
+    }
+    .hobby-item {
+      margin: 8px 0;
+    }
+    .progress {
+      width: 80%;
+      margin: 20px auto;
+      height: 25px;
+      background: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: #3b82f6;
+      text-align: center;
+      color: #fff;
+      line-height: 25px;
+      transition: width 0.3s;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-      <div class="brand"><div class="logo"></div> Desafio <span style="color:var(--neon)">30 Dias</span> de Hobbies</div>
-      <nav style="display:flex; gap:10px; flex-wrap:wrap">
-        <a class="btn secondary" href="#" data-go="home">Início</a>
-        <a class="btn secondary" href="#" data-go="select">Selecionar</a>
-        <a class="btn secondary" href="#" data-go="dashboard">Dashboard</a>
-      </nav>
+
+  <div id="intro">
+    <h1>🎯 Desafio 30 Dias de Hobbies</h1>
+    <p>Você tem 30 dias para realizar 20 hobbies de uma lista com 60 opções.</p>
+    <button onclick="startSelection()">Iniciar seleção</button>
+  </div>
+
+  <div id="selection" class="hidden">
+    <h2>Escolha 20 hobbies:</h2>
+    <div id="hobbyContainer" class="hobby-list"></div>
+    <button onclick="confirmSelection()">Confirmar seleção</button>
+  </div>
+
+  <div id="dashboard" class="hidden">
+    <h2>Seu Desafio</h2>
+    <p id="countdown"></p>
+    <div class="progress">
+      <div id="progressBar" class="progress-bar">0/20</div>
     </div>
-  </header>
+    <div id="chosenHobbies" class="hobby-list"></div>
+  </div>
 
-  <main>
-    <!-- HOME -->
-    <section id="home" class="active">
-      <div class="center card">
-        <h1>Bem-vindo ao <span style="color:var(--neon)">Desafio 30 Dias de Hobbies</span></h1>
-        <p class="lead">Você tem <b>30 dias</b> para realizar <b>20 hobbies</b> de uma lista com <b>60 opções</b>. Comece agora e descubra novas paixões!</p>
-        <div class="actions">
-          <button id="btnStart" class="pulse">🚀 Iniciar Desafio</button>
-          <button id="btnContinue" class="secondary">Continuar de onde parei</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- SELECT -->
-    <section id="select">
-      <div class="center">
-        <div class="topbar">
-          <h1>Escolha seus 20 hobbies</h1>
-          <div class="counter"><span id="selCount">0</span>/20 selecionados</div>
-        </div>
-        <div class="card">
-          <div class="grid-choices" id="choices"></div>
-          <div class="actions" style="margin-top:18px">
-            <button id="btnConfirm" disabled>Confirmar seleção</button>
-            <button id="btnClearSel" class="secondary">Limpar seleção</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- DASHBOARD -->
-    <section id="dashboard">
-      <div class="center">
-        <div class="card dash">
-          <div class="timebar">
-            <div class="chip">⏳ Tempo restante: <span id="countdown" class="mono">—</span></div>
-            <div class="chip">Progresso: <span id="progressText" class="mono">0/20</span></div>
-          </div>
-          <div class="progress" aria-label="Barra de progresso">
-            <i id="bar"></i>
-          </div>
-          <div class="cards" id="cards"></div>
-          <div class="actions">
-            <button id="btnFinishEarly" class="secondary">Finalizar agora</button>
-            <button id="btnReset" class="secondary">Reiniciar desafio</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RESULT -->
-    <section id="result">
-      <div class="center card" id="resultBox">
-        <h1 id="resultTitle">Resultado</h1>
-        <p class="lead" id="resultMsg"></p>
-        <div class="actions">
-          <button id="btnRestart">Começar de novo</button>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="footer-inner">Estilo: <i>pique futuro preto e azul</i>. Progresso e dados são salvos no <b>localStorage</b> do seu navegador.</div>
-  </footer>
+  <div id="result" class="hidden">
+    <h2 id="resultMessage"></h2>
+  </div>
 
   <script>
-    // ====== DADOS ======
-    const TOTAL_TO_DO = 20;
-    const TOTAL_DAYS = 30;
-
+    // LISTA DE 60 HOBBIES COM DICAS
     const HOBBIES = [
-      'Leitura', 'Escrita criativa', 'Jardinagem', 'Caminhada', 'Corrida', 'Ciclismo', 'Yoga', 'Meditação', 'Desenho', 'Pintura',
-      'Fotografia', 'Vídeo/Filmagem', 'Culinária', 'Confeitaria', 'Panificação', 'Origami', 'Caligrafia', 'Tricô', 'Crochê', 'Costura',
-      'Marcenaria', 'Modelismo', 'Quebra-cabeças', 'Xadrez', 'Damas', 'Jogos de tabuleiro', 'Ukulele', 'Violão', 'Teclado', 'Canto',
-      'Dança', 'Alongamento', 'Pilates', 'Escalada Indoor', 'Patins', 'Skate', 'Natação', 'Aquarela', 'Acrílico', 'Arte digital', 'Podcast',
-      'Blog', 'Jornalismo pessoal', 'Astrofotografia', 'Observação de aves', 'Colecionismo', 'Voluntariado', 'Aprender idiomas', 'Programação', 'Robótica',
-      'Eletrônica DIY', 'Impressão 3D', 'Cerâmica', 'Velas artesanais', 'Sabonetes artesanais', 'Mixologia (drinks sem álcool)', 'Barismo (café)', 'Magia de cartas', 'Sudoku', 'Cubo mágico'
+      {name:"Ler um livro", tips:["Escolha um livro curto","Leia 10 páginas por dia","Faça anotações rápidas"]},
+      {name:"Caminhar ao ar livre", tips:["Comece com 20 minutos","Use tênis confortável","Escolha um horário tranquilo"]},
+      {name:"Meditar", tips:["Comece com 5 minutos","Use um app de meditação","Concentre-se na respiração"]},
+      {name:"Desenhar", tips:["Use lápis e papel simples","Desenhe objetos da sua casa","Não se preocupe com perfeição"]},
+      {name:"Cozinhar algo novo", tips:["Escolha uma receita fácil","Separe todos os ingredientes antes","Comece com pratos rápidos"]},
+      {name:"Aprender origami", tips:["Comece com modelos simples","Use papel quadrado","Assista tutoriais curtos"]},
+      {name:"Tocar um instrumento", tips:["Pratique 10 minutos por dia","Aprenda uma música fácil","Grave para acompanhar evolução"]},
+      {name:"Jardinagem", tips:["Plante algo pequeno","Regue com frequência","Observe o crescimento"]},
+      {name:"Escrever um diário", tips:["Escreva 5 minutos por dia","Não se preocupe com erros","Foque em como se sente"]},
+      {name:"Fotografia", tips:["Use a câmera do celular","Brinque com ângulos diferentes","Aproveite a luz natural"]},
+      {name:"Pintura", tips:["Use guache ou aquarela","Escolha cores que gosta","Pinte sem se preocupar com técnica"]},
+      {name:"Yoga", tips:["Siga um vídeo curto","Use tapete ou toalha","Respeite seus limites"]},
+      {name:"Alongamento", tips:["Alongue 10 minutos","Foque na respiração","Não force além do limite"]},
+      {name:"Dança", tips:["Escolha uma música animada","Dance sem regras","Convide alguém pra dançar junto"]},
+      {name:"Esportes coletivos", tips:["Combine com amigos","Jogue de forma recreativa","Alongue antes de começar"]},
+      {name:"Correr", tips:["Comece com caminhada rápida","Use tênis confortável","Progrida devagar"]},
+      {name:"Treino em casa", tips:["Use vídeos do YouTube","Faça 15 minutos","Use peso corporal"]},
+      {name:"Podcasts", tips:["Escolha um tema de interesse","Ouça em momentos livres","Anote algo que aprendeu"]},
+      {name:"Aprender idioma", tips:["Use aplicativos gratuitos","Pratique 10 minutos","Assista vídeos no idioma"]},
+      {name:"Assistir documentário", tips:["Escolha um tema curioso","Anote pontos interessantes","Compartilhe o que aprendeu"]},
+      {name:"Cuidar de um pet", tips:["Brinque com ele","Ensine truques simples","Observe comportamento"]},
+      {name:"Artesanato", tips:["Use materiais recicláveis","Comece pequeno","Pesquise ideias simples"]},
+      {name:"Escrever poesia", tips:["Não se preocupe com rima","Escreva sentimentos","Use metáforas livres"]},
+      {name:"Board games", tips:["Convide amigos ou família","Aprenda regras básicas","Comece com jogos rápidos"]},
+      {name:"Xadrez", tips:["Aprenda movimentos básicos","Jogue online","Resolva desafios curtos"]},
+      {name:"Cubo mágico", tips:["Aprenda um método fácil","Pratique pouco por dia","Cronometre depois"]},
+      {name:"Videogame", tips:["Experimente um jogo novo","Defina tempo limite","Jogue de forma relaxante"]},
+      {name:"Costura", tips:["Comece com pontos básicos","Conserte uma roupa","Use vídeos de tutoriais"]},
+      {name:"Crochê", tips:["Aprenda ponto corrente","Pratique alguns minutos","Faça algo pequeno"]},
+      {name:"Bordado", tips:["Use desenhos simples","Comece pequeno","Escolha cores vibrantes"]},
+      {name:"Caminhada urbana", tips:["Explore sua cidade","Observe arquitetura","Fotografe pontos legais"]},
+      {name:"Explorar música nova", tips:["Use Spotify ou YouTube","Crie playlist temática","Compartilhe com amigos"]},
+      {name:"Tocar percussão", tips:["Use objetos de casa","Siga batidas simples","Acompanhe uma música"]},
+      {name:"Karaokê", tips:["Escolha músicas conhecidas","Cante sem se preocupar","Convide alguém"]},
+      {name:"Assistir teatro online", tips:["Pesquise peças gratuitas","Reserve 1 hora","Anote reflexões"]},
+      {name:"Piquenique", tips:["Prepare lanches simples","Escolha parque próximo","Leve música ou livro"]},
+      {name:"Ciclismo", tips:["Use capacete","Comece com trajetos curtos","Leve água"]},
+      {name:"Patins ou skate", tips:["Use proteção","Treine em local seguro","Comece devagar"]},
+      {name:"Voluntariado", tips:["Pesquise projetos locais","Doe 1h do seu tempo","Apoie causas que gosta"]},
+      {name:"Caminhar ouvindo música", tips:["Escolha playlist animada","Caminhe sem pressa","Respire fundo"]},
+      {name:"Escrever cartas", tips:["Escreva para alguém especial","Use papel simples","Fale de lembranças boas"]},
+      {name:"Praticar gratidão", tips:["Liste 3 coisas por dia","Escreva no diário","Compartilhe com alguém"]},
+      {name:"Desenhar quadrinhos", tips:["Use tirinhas simples","Crie personagens rápidos","Não foque em perfeição"]},
+      {name:"Analisar sonhos", tips:["Anote ao acordar","Tente interpretar símbolos","Compare ao longo do tempo"]},
+      {name:"Cuidar da casa", tips:["Organize um cômodo pequeno","Doe algo que não usa","Limpe ouvindo música"]},
+      {name:"Fotografia da natureza", tips:["Vá a um parque","Fotografe plantas","Observe detalhes"]},
+      {name:"Estudo rápido", tips:["Leia artigo curto","Faça resumo simples","Compartilhe o que aprendeu"]},
+      {name:"Podcast pessoal", tips:["Grave no celular","Fale sobre seu dia","Compartilhe se quiser"]},
+      {name:"Mindfulness", tips:["Observe o presente","Respire fundo","Use app guia"]},
+      {name:"Colecionar algo", tips:["Escolha tema fácil","Guarde com cuidado","Pesquise online"]},
+      {name:"Cuidar da saúde", tips:["Beba 2L de água","Durma 8h","Evite celular antes de dormir"]},
+      {name:"Aprender finanças pessoais", tips:["Assista vídeo curto","Anote gastos","Estabeleça meta simples"]},
+      {name:"Criar playlist", tips:["Escolha músicas favoritas","Separe por humor","Compartilhe"]},
+      {name:"Assistir filmes clássicos", tips:["Escolha um famoso","Veja em boa qualidade","Pesquise contexto histórico"]},
+      {name:"Esportes radicais (leve)", tips:["Pesquise atividades seguras","Comece com supervisão","Respeite limites"]},
+      {name:"Astronomia", tips:["Observe o céu noturno","Baixe app de estrelas","Aprenda constelações"]},
+      {name:"Experiência científica simples", tips:["Use materiais de casa","Siga tutoriais online","Anote resultados"]},
+      {name:"Blog pessoal", tips:["Escreva no Medium ou Notion","Compartilhe pensamentos","Use imagens livres"]},
+      {name:"Mapa de sonhos", tips:["Use imagens de revistas","Cole em cartolina","Defina objetivos"]},
+      {name:"Aprender caligrafia", tips:["Treine letras no caderno","Use caneta simples","Pratique 10 minutos"]},
     ];
 
-    const SUGESTOES = {
-      'Leitura':['Crie uma meta de 20 páginas/dia','Experimente um gênero novo','Participe de um clube do livro'],
-      'Escrita criativa':['Escreva 300 palavras por dia','Use prompts aleatórios','Revise um texto antigo'],
-      'Jardinagem':['Plante ervas na janela','Rega 3x por semana','Faça compostagem básica'],
-      'Caminhada':['Rota de 20 minutos','Acompanhe passos','Convide um amigo'],
-      'Corrida':['Teste método 1min corre/1min anda','Aqueça 5 min','Alongue após correr'],
-      'Ciclismo':['Percurso plano de 5km','Cheque pneus e freios','Use app de rotas'],
-      'Yoga':['Aula iniciante de 15 min','Postura da criança','Sequência de alongamento matinal'],
-      'Meditação':['5–10 min guiada','Respiração 4-7-8','Registre sensações'],
-      'Desenho':['Esboço de objetos da mesa','Estudos de sombra','Desafio de 30 min'],
-      'Pintura':['Paleta limitada de 3 cores','Estudo de paisagem','Use referência fotográfica'],
-      'Fotografia':['Regra dos terços','Retratos com luz de janela','Série em preto e branco'],
-      'Vídeo/Filmagem':['Vlog curto de 1 min','Estude ângulos de câmera','Teste edição básica'],
-      'Culinária':['Aprenda 1 receita nova','Mise en place','Experimente temperos'],
-      'Confeitaria':['Cookies simples','Controle de forno','Decoração com glacê'],
-      'Panificação':['Pão de frigideira','Sova por 10 min','Fermentação correta'],
-      'Origami':['Grou clássico','Use papel quadrado','Dobre com precisão'],
-      'Caligrafia':['Traços básicos','Caneta brush','Pratique alfabetos'],
-      'Tricô':['Amostra ponto meia','Projeto cachecol','Contagem de pontos'],
-      'Crochê':['Agulha 4mm e fio médio','Aprenda ponto alto','Faça um porta-copo'],
-      'Costura':['Alfinetar e alinhavar','Casear à mão','Projetinho de nécessaire'],
-      'Marcenaria':['Lixe em três granulações','Monte um banquinho','Selador para acabamento'],
-      'Modelismo':['Kit iniciante','Pintura com primer','Aplique decalques'],
-      'Quebra-cabeças':['Comece bordas','Organize por cor','Cronometre o tempo'],
-      'Xadrez':['Estude mates em 1','Controle do centro','Jogue 10+0 online'],
-      'Damas':['Abra com 9-13','Treine táticas','Partida amistosa'],
-      'Jogos de tabuleiro':['Leia regras novas','Sessão em família','Registre vitórias'],
-      'Ukulele':['Acordes C-G-Am-F','Ritmo básico','Toque 1 música'],
-      'Violão':['Troca de acordes','Batida simples','Afinador do celular'],
-      'Teclado':['Escala de Dó','Metrônomo 80bpm','Música infantil'],
-      'Canto':['Aquecimento vocal','Respiração diafragmática','Grave e ouça'],
-      'Dança':['Aprenda 8 tempos','Siga um tutorial','Alongue tornozelos'],
-      'Alongamento':['Rotina de 10 min','Foque posterior de coxa','Respire profundamente'],
-      'Pilates':['Série para core','Controle de respiração','Postura neutra'],
-      'Escalada Indoor':['Aula boulder V0','Aprenda queda segura','Descanse entre vias'],
-      'Patins':['Use proteções','Pratique freio T','Circuito plano'],
-      'Skate':['Empurrada correta','Ollie básico (teoria)','Pista tranquila'],
-      'Natação':['4x25m crawl leve','Técnica de respiração','Acessórios simples'],
-      'Aquarela':['Molhado sobre seco','Mistura de cores','Papel 300gsm'],
-      'Acrílico':['Camadas finas','Limpe pincéis','Use médium'],
-      'Arte digital':['Brushes básicos','Estudo de luz','Camadas organizadas'],
-      'Podcast':['Roteiro curto','Grave no celular','Edite ruído'],
-      'Blog':['Escolha tema','Post de 300 palavras','Imagem de capa'],
-      'Jornalismo pessoal':['Diário de 5 min','Resumo do dia','Foto do momento'],
-      'Astrofotografia':['Acompanhe fases da Lua','Tripé é essencial','Apps de céu noturno'],
-      'Observação de aves':['Manhã cedo','Binóculos 8x42','Checklist local'],
-      'Colecionismo':['Defina foco','Planilha simples','Cuide da conservação'],
-      'Voluntariado':['Pesquise causas','Doe 1 hora','Convide amigos'],
-      'Aprender idiomas':['10 novas palavras','Anki/flashcards','Vídeo de 10 min'],
-      'Programação':['Kata de 30 min','Leia documentação','Publique um snippet'],
-      'Robótica':['Monte kit simples','Sensor ultrassônico','Teste motores'],
-      'Eletrônica DIY':['Protoboard LED','Lei de Ohm','Soldagem segura'],
-      'Impressão 3D':['Nivelamento da mesa','Fio PLA 0.2mm','Peça utilitária'],
-      'Cerâmica':['Cilindro no torno','Texturas com ferramentas','Queima e esmalte'],
-      'Velas artesanais':['Cera + pavio','Essência 6%','Etiquete segurança'],
-      'Sabonetes artesanais':['Base glicerinada','Formas de silicone','Curas e cuidados'],
-      'Mixologia (drinks sem álcool)':['Xarope simples','Balance doce/ácido','Gelo grande'],
-      'Barismo (café)':['Proporção 1:15','Moagem adequada','Controle de tempo'],
-      'Magia de cartas':['Forcing simples','False shuffle','Apresente a alguém'],
-      'Sudoku':['Comece pelos fáceis','Estratégia lápis','Sem chutar'],
-      'Cubo mágico':['Método camadas','Pratique cruz','Cronometre solves']
-    };
+    // ----- SISTEMA -----
+    let selectedHobbies = [];
+    let completed = 0;
+    let deadline = null;
 
-    // ====== ESTADO & STORAGE ======
-    const KEY = 'hobbies30d_v1';
-    let state = loadState();
+    function startSelection() {
+      document.getElementById('intro').classList.add('hidden');
+      document.getElementById('selection').classList.remove('hidden');
 
-    function defaultState(){
-      return { startedAt:null, selected:[], done:[], finished:false };
-    }
-    function loadState(){
-      try{ const s = JSON.parse(localStorage.getItem(KEY)); if(s) return s; }catch(e){}
-      return defaultState();
-    }
-    function saveState(){ localStorage.setItem(KEY, JSON.stringify(state)); }
-
-    // ====== NAVEGAÇÃO ======
-    const sections = ['home','select','dashboard','result'];
-    function go(id){
-      sections.forEach(s=>document.getElementById(s).classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      if(id==='select') renderChoices();
-      if(id==='dashboard') renderDashboard();
-      if(id==='result') renderResult();
-    }
-    document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); go(a.dataset.go) }));
-
-    // ====== HOME ======
-    const btnStart = document.getElementById('btnStart');
-    const btnContinue = document.getElementById('btnContinue');
-    btnStart.addEventListener('click', ()=>{
-      state = defaultState();
-      state.startedAt = Date.now();
-      saveState();
-      go('select');
-    });
-    btnContinue.addEventListener('click', ()=>{
-      if(state.startedAt){ go(state.selected.length? 'dashboard' : 'select'); }
-      else { alert('Nenhum desafio iniciado ainda. Clique em Iniciar Desafio.'); }
-    });
-
-    // ====== SELECT PAGE ======
-    const choicesEl = document.getElementById('choices');
-    const selCountEl = document.getElementById('selCount');
-    const btnConfirm = document.getElementById('btnConfirm');
-    const btnClearSel = document.getElementById('btnClearSel');
-
-    function renderChoices(){
-      choicesEl.innerHTML = '';
-      const selectedSet = new Set(state.selected);
-      HOBBIES.forEach((hobby, idx)=>{
-        const id = 'hob_'+idx;
-        const div = document.createElement('label');
-        div.className = 'choice';
-        div.innerHTML = `
-          <input type="checkbox" id="${id}" ${selectedSet.has(hobby)?'checked':''}>
-          <div>
-            <h4>${hobby}</h4>
-            <p>${(SUGESTOES[hobby]||[]).slice(0,2).join(' • ')}</p>
-          </div>`;
-        const input = div.querySelector('input');
-        input.addEventListener('change', ()=>toggleSelect(hobby, input.checked));
-        choicesEl.appendChild(div);
+      const container = document.getElementById('hobbyContainer');
+      container.innerHTML = "";
+      HOBBIES.forEach((hobby, index) => {
+        const div = document.createElement('div');
+        div.className = "hobby-item";
+        div.innerHTML = `<input type="checkbox" id="hobby${index}" value="${index}">
+                         <label for="hobby${index}">${hobby.name}</label>`;
+        container.appendChild(div);
       });
-      updateSelectUI();
     }
 
-    function toggleSelect(hobby, checked){
-      const i = state.selected.indexOf(hobby);
-      if(checked && i===-1){
-        if(state.selected.length>=TOTAL_TO_DO){
-          alert('Você só pode escolher 20 hobbies.');
-          // desfaz check visual
-          const all = choicesEl.querySelectorAll('input');
-          all.forEach(inp=>{ if(inp.nextElementSibling?.querySelector('h4')?.textContent===hobby) inp.checked=false;});
-          return;
-        }
-        state.selected.push(hobby);
-      } else if(!checked && i>-1){
-        state.selected.splice(i,1);
+    function confirmSelection() {
+      const checkboxes = document.querySelectorAll('#hobbyContainer input:checked');
+      if (checkboxes.length !== 20) {
+        alert("Você deve escolher exatamente 20 hobbies!");
+        return;
       }
-      saveState();
-      updateSelectUI();
-    }
+      selectedHobbies = Array.from(checkboxes).map(c => HOBBIES[c.value]);
+      deadline = new Date();
+      deadline.setDate(deadline.getDate() + 30);
 
-    function updateSelectUI(){
-      selCountEl.textContent = state.selected.length;
-      btnConfirm.disabled = state.selected.length!==TOTAL_TO_DO;
-      // desabilita outros quando chegar a 20
-      const all = choicesEl.querySelectorAll('input');
-      all.forEach(inp=>{
-        const hobby = inp.nextElementSibling?.querySelector('h4')?.textContent;
-        if(!inp.checked) inp.disabled = state.selected.length>=TOTAL_TO_DO;
-        // acessibilidade title
-        if(inp.disabled) inp.title = 'Limite de 20 atingido'; else inp.removeAttribute('title');
-      });
-    }
+      document.getElementById('selection').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
 
-    btnConfirm.addEventListener('click', ()=>{
-      if(state.selected.length!==TOTAL_TO_DO) return;
-      state.done = [];
-      saveState();
-      go('dashboard');
-    });
-
-    btnClearSel.addEventListener('click', ()=>{ state.selected = []; saveState(); renderChoices(); });
-
-    // ====== DASHBOARD ======
-    const cardsEl = document.getElementById('cards');
-    const barEl = document.getElementById('bar');
-    const progressText = document.getElementById('progressText');
-    const countdownEl = document.getElementById('countdown');
-    const btnFinishEarly = document.getElementById('btnFinishEarly');
-    const btnReset = document.getElementById('btnReset');
-
-    function renderDashboard(){
-      if(!state.startedAt){ go('home'); return; }
-      if(!state.selected.length){ go('select'); return; }
-      // cards
-      cardsEl.innerHTML='';
-      const doneSet = new Set(state.done);
-      state.selected.forEach(hobby=>{
-        const d = document.createElement('div');
-        d.className = 'card-hobby'+(doneSet.has(hobby)?' done':'');
-        const sugg = (SUGESTOES[hobby]||[]).map(s=>`<li>${s}</li>`).join('');
-        d.innerHTML = `
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px">
-            <strong>${hobby}</strong>
-            <span class="chip">Sugestões de atividades</span>
-          </div>
-          <details ${doneSet.has(hobby)?'open':''}>
-            <summary>Ver ideias para praticar</summary>
-            <ul style="margin:8px 0 0 18px">${sugg}</ul>
-          </details>
-          <button data-done="${hobby}">${doneSet.has(hobby)?'Concluído ✅':'Concluído ✅'}</button>
-        `;
-        d.querySelector('button').addEventListener('click',()=>toggleDone(hobby));
-        cardsEl.appendChild(d);
-      });
-      updateProgress();
-      startOrSyncTimer();
-    }
-
-    function toggleDone(hobby){
-      const i = state.done.indexOf(hobby);
-      if(i===-1) state.done.push(hobby); else state.done.splice(i,1);
-      saveState();
-      updateProgress();
       renderDashboard();
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
     }
 
-    function updateProgress(){
-      const done = state.done.length; const pct = Math.min(1, done / TOTAL_TO_DO);
-      barEl.style.width = (pct*100)+'%';
-      progressText.textContent = `${done}/${TOTAL_TO_DO}`;
-      // fim por conclusão
-      if(done>=TOTAL_TO_DO){ state.finished = true; saveState(); go('result'); }
+    function renderDashboard() {
+      const container = document.getElementById('chosenHobbies');
+      container.innerHTML = "";
+      selectedHobbies.forEach((hobby, i) => {
+        const div = document.createElement('div');
+        div.className = "hobby-item";
+        div.innerHTML = `<strong>${hobby.name}</strong><br>
+                         💡 Dicas: ${hobby.tips.join(", ")}<br>
+                         <button onclick="markDone(${i})">Concluído ✅</button>`;
+        container.appendChild(div);
+      });
     }
 
-    let timer = null;
-    function startOrSyncTimer(){
-      if(timer) clearInterval(timer);
-      timer = setInterval(()=>{
-        const msLeft = (state.startedAt + TOTAL_DAYS*24*60*60*1000) - Date.now();
-        if(msLeft <= 0){ countdownEl.textContent = '00d 00h 00m 00s'; clearInterval(timer); go('result'); return; }
-        const d = Math.floor(msLeft/86400000);
-        const h = Math.floor((msLeft%86400000)/3600000);
-        const m = Math.floor((msLeft%3600000)/60000);
-        const s = Math.floor((msLeft%60000)/1000);
-        countdownEl.textContent = `${pad(d)}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
-      }, 1000);
+    function markDone(index) {
+      completed++;
+      document.getElementById('progressBar').style.width = (completed/20*100)+"%";
+      document.getElementById('progressBar').innerText = `${completed}/20`;
+      if (completed === 20) finishChallenge(true);
     }
-    function pad(n){ return String(n).padStart(2,'0'); }
 
-    btnFinishEarly.addEventListener('click', ()=>{ go('result'); });
-    btnReset.addEventListener('click', ()=>{ if(confirm('Reiniciar apaga seu progresso. Continuar?')){ state = defaultState(); saveState(); go('home'); }});
-
-    // ====== RESULT ======
-    const resultTitle = document.getElementById('resultTitle');
-    const resultMsg = document.getElementById('resultMsg');
-    const btnRestart = document.getElementById('btnRestart');
-
-    function renderResult(){
-      const done = state.done.length;
-      const deadline = state.startedAt ? new Date(state.startedAt + TOTAL_DAYS*24*60*60*1000) : null;
-      const timeOver = state.startedAt && Date.now() >= deadline;
-      const completed = done >= TOTAL_TO_DO;
-
-      if(completed){
-        resultTitle.textContent = 'Parabéns! 🎉';
-        resultMsg.textContent = `Você concluiu ${done}/${TOTAL_TO_DO} hobbies dentro de ${TOTAL_DAYS} dias. Incrível!`;
-      } else if(timeOver){
-        resultTitle.textContent = 'Tempo esgotado ⏰';
-        resultMsg.textContent = `Você completou ${done}/${TOTAL_TO_DO} hobbies. Que tal tentar novamente e bater a meta?`;
-      } else {
-        resultTitle.textContent = 'Quer finalizar agora?';
-        resultMsg.textContent = `Até agora você concluiu ${done}/${TOTAL_TO_DO}. Você pode continuar no dashboard até o prazo acabar.`;
+    function updateCountdown() {
+      const now = new Date();
+      const diff = deadline - now;
+      if (diff <= 0) {
+        finishChallenge(false);
+        return;
       }
+      const days = Math.floor(diff/(1000*60*60*24));
+      const hours = Math.floor((diff/(1000*60*60))%24);
+      const mins = Math.floor((diff/(1000*60))%60);
+      document.getElementById('countdown').innerText =
+        `Tempo restante: ${days}d ${hours}h ${mins}m`;
     }
 
-    btnRestart.addEventListener('click', ()=>{ state = defaultState(); saveState(); go('home'); });
-
-    // ====== STARTUP ======
-    // Vai para a tela correta ao carregar
-    if(state.startedAt){
-      if(state.selected.length){ go('dashboard'); } else { go('select'); }
-    } else {
-      go('home');
+    function finishChallenge(success) {
+      document.getElementById('dashboard').classList.add('hidden');
+      document.getElementById('result').classList.remove('hidden');
+      document.getElementById('resultMessage').innerText =
+        success ? "🎉 Parabéns! Você concluiu os 20 hobbies!" :
+        `Desafio encerrado! Você concluiu ${completed}/20 hobbies.`;
     }
   </script>
 </body>
